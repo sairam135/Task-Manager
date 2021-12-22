@@ -3,7 +3,7 @@ let user=require('../models/user')
 let auth=async(req,res,next)=>{
     try {
         let token=req.header('Authorization').replace('Bearer ','')
-        let decoded=jwt.verify(token,'Thisisnode')
+        let decoded=jwt.verify(token,process.env.JWT_SECRET)
         let User=await user.findOne({_id:decoded._id,'tokens.token':token})
         if(!User){
             throw new Error()
