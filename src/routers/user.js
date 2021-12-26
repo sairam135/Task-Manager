@@ -18,34 +18,34 @@ let upload=multer({
     }
 })
 
-router.get('/users/me',auth,async (req,res)=>{
+router.get('/api/users/me',auth,async (req,res)=>{
     res.send(req.User)
 })
 
-router.post('/users',async(req,res)=>{
+router.post('/api/users',async(req,res)=>{
     let newUser=new user(
         req.body
     )
     try {
         await newUser.save()
-        let token=await newUser.generateAuthToken()
-        res.status(201).send({newUser,token})
+        //let token=await newUser.generateAuthToken()
+        res.send({status:'OK'})
     } catch (error) {
-        res.status(400).send(error)
+        res.send({status:'ERROR',error})
     }  
 })
 
-router.post('/users/login',async(req,res)=>{
+router.post('/api/users/login',async(req,res)=>{
     try {
         let User=await user.findByCredentials(req.body.email,req.body.password)
         let token=await User.generateAuthToken()
-        res.send({User,token})
+        res.send({status:'OK',token})
     } catch (error) {
-        res.status(400).send()
+        res.send({status:'ERROR',error})
     }
 })
 
-router.post('/users/logout',auth,async (req,res)=>{
+router.post('api/users/logout',auth,async (req,res)=>{
     try {
         req.User.tokens=req.User.tokens.filter((token)=>token.token!==req.token)
         await req.User.save()

@@ -4,7 +4,7 @@ let task=require('../models/task')
 let user=require('../models/user')
 let auth=require('../middleware/auth')
 
-router.get('/tasks',auth,async (req,res)=>{
+router.get('/api/tasks',auth,async (req,res)=>{
     let match={}
     let sortOptions={}
     if(req.query.completed){
@@ -40,7 +40,8 @@ router.get('/tasks/:id',auth,async (req,res)=>{
 })
 
 
-router.post('/tasks',auth,async (req,res)=>{
+router.post('/api/tasks',auth,async (req,res)=>{
+    console.log(req.body)
     let newTask=new task({
         ...req.body,
         owner: req.User._id
@@ -53,7 +54,7 @@ router.post('/tasks',auth,async (req,res)=>{
     }
 })
 
-router.patch('/tasks/:id',auth,async(req,res)=>{
+router.patch('/api/tasks/:id',auth,async(req,res)=>{
     try {
         let updates=Object.keys(req.body)
         let Task=await task.findOne({_id:req.params.id,owner:req.User._id})
@@ -68,7 +69,7 @@ router.patch('/tasks/:id',auth,async(req,res)=>{
     }
 })
 
-router.delete('/tasks/:id',auth,async(req,res)=>{
+router.delete('/api/tasks/:id',auth,async(req,res)=>{
     try {
         let Task=await task.findOneAndDelete({_id:req.params.id,owner:req.User._id})
         if(!Task){
